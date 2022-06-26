@@ -17,7 +17,7 @@ function App() {
         >
           Learn React
         </a>
-        <p>API_URL: {window._runtime-envs_.API_URL}</p>
+        <p>API_URL: {window._runtimeenvs_.API_URL}</p>
       </header>
     </div>
   );

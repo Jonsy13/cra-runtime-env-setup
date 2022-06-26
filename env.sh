@@ -5,7 +5,7 @@ rm -rf ./env-config.js
 touch ./env-config.js
 
 # Add assignment 
-echo "window._runtime-envs_ = {" >> ./env-config.js
+echo "window._runtimeenvs_ = {" >> ./env-config.js
 
 # Read each line in .env file
 # Each line represents key=value pairs
