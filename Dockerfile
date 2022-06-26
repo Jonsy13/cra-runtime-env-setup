@@ -34,9 +34,6 @@ EXPOSE 8080
 COPY ./env.sh /usr/share/nginx/html/env.sh
 COPY .env /usr/share/nginx/html/.env
 
-# Add bash
-RUN apk add --no-cache bash
-
 # Make our shell script executable
 RUN chmod +x /usr/share/nginx/html/env.sh
 
