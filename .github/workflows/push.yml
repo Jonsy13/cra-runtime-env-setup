@@ -1,0 +1,37 @@
+name: push-pipeline
+on:
+  push:
+
+
+jobs:
+  ## TODO: the build time for multiarch frontend image is higher so it is used in the release
+  ## builds only need to optimize the build duration and also add it with ci tag
+  ## Build and push / base path
+  docker-build-and-push-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push mongo-utils
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: Dockerfile
+          context: .
+          platforms: linux/amd64
+          tags: jonsy13/sample-frontend:ci
+
+
