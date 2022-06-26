@@ -31,11 +31,13 @@ COPY  --from=react-build /frontend/build /usr/share/nginx/html
 
 EXPOSE 8080
 
-COPY ./env.sh /usr/share/nginx/html/env.sh
-COPY .env /usr/share/nginx/html/.env
+# Copy .env file and shell script to container
+WORKDIR /usr/share/nginx/html
+COPY ./env.sh .
+COPY .env .
 
 # Make our shell script executable
-RUN chmod +x /usr/share/nginx/html/env.sh
+RUN chmod +x env.sh
 
 # Start Nginx server
 CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
