@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# Runtime Environment Variables Setup for Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository demonstrates a basic setup for using runtime env variables in Create React App.
+Basically for providing runtime envs, we will be using windows object available in browser.
 
-## Available Scripts
+For this setup, mainly 2 additional files are required - 
+- `env.sh`
+- `.env`
 
-In the project directory, you can run:
+We are using a shell script `env.sh` which create a file `env-config.js` with all env variables defined in `.env`.
 
-### `npm start`
+Shell script will read all variables provided in `.env` file line by line and will check if same variable is given a value in env variable in container.
+If there is env variable present in container with same name then it will assign same value to that variable and add it to `env-config.js` (generated at runtime) as an key-value pair in object `window._env_`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+If there is no env variable present in container with key name, then it will take the default value in `.env` and add the same in `env-config.js`.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Adding new env variables - 
 
-### `npm test`
+Just Add the variable with it's default value as `key=value` in `.env` file and provide it's value at the runtime.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Accessing env variable in project - 
 
-### `npm run build`
+As we are providing env as windows object, same can be accessed like - `window._env_.<ENV_NAME>`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Adding same setup in a different project - 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. For adding this setup in a different project - copy the files `.env` & `env.sh` to root of the project.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Make changes in Dockerfile for copying the same in docker container while building - 
 
-### `npm run eject`
+```
+# Copy .env file and shell script to container
+WORKDIR /usr/share/nginx/html
+COPY ./env.sh .
+COPY .env .
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. Update command in Dockerfile for running shell script along with nginx for generating the file `env-config.js` at the runtime.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Add an script tag in `index.html` of your project to run this generated file `env-config.js` at runtime like below - 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+<script src="%PUBLIC_URL%/env-config.js"></script>
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Note - If you are making changes in paths of above file, update the CMD accordingly. 
