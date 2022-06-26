@@ -43,4 +43,6 @@ COPY .env .
 <script src="%PUBLIC_URL%/env-config.js"></script>
 ```
 
-Note - If you are making changes in paths of above file, update the CMD accordingly. 
+**Note -**
+1. **If you are making changes in paths of above files, update the CMD accordingly.**
+2. **Only make those variable runtime enabled, which are not exposing any security vulnerability to your application, as windows object can be updated by user from browser as well.**
