@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-frontend
+  labels:
+    component: sample-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: sample-frontend
+  template:
+    metadata:
+      labels:
+        component: sample-frontend
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: sample-frontend
+          image: jonsy13/sample-frontend:ci
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: API_URL
+              value: "http://runtime-api-k8s"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-frontend-service
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 9091
+      targetPort: 8080
+  selector:
+    component: sample-frontend

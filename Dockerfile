@@ -38,4 +38,4 @@ COPY .env /usr/share/nginx/html/.env
 RUN chmod +x /usr/share/nginx/html/env.sh
 
 # Start Nginx server
-CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
+CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
